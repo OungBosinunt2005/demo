@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rika Flowers — E-commerce</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          boxShadow: {
+            soft: "0 12px 34px rgba(0,0,0,0.08)",
+            glow: "0 0 0 6px rgba(236,72,153,0.12)"
+          },
+          keyframes: {
+            floaty: { "0%,100%": { transform: "translateY(0)" }, "50%": { transform: "translateY(-10px)" } },
+            pop: { "0%": { transform:"scale(.96)", opacity:.0 }, "100%": { transform:"scale(1)", opacity:1 } },
+            shine: { "0%": { backgroundPosition: "-220% 0" }, "100%": { backgroundPosition: "220% 0" } },
+            marquee: { "0%": { transform: "translateX(0)" }, "100%": { transform: "translateX(-50%)" } }
+          },
+          animation: {
+            floaty: "floaty 6s ease-in-out infinite",
+            pop: "pop .18s ease-out both",
+            marquee: "marquee 22s linear infinite",
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    /* Animated gradient ring */
+    .grad-ring {
+      background:
+        radial-gradient(circle at 30% 20%, rgba(236,72,153,.35), transparent 55%),
+        radial-gradient(circle at 70% 60%, rgba(244,63,94,.25), transparent 60%),
+        radial-gradient(circle at 20% 80%, rgba(168,85,247,.18), transparent 55%);
+      filter: blur(0.2px);
+    }
+    /* Shimmer effect */
+    .shimmer {
+      background: linear-gradient(90deg, rgba(255,255,255,.25) 0%, rgba(255,255,255,.75) 45%, rgba(255,255,255,.25) 100%);
+      background-size: 200% 100%;
+      animation: shine 2.3s ease-in-out infinite;
+    }
+    /* Soft glass */
+    .glass { background: rgba(255,255,255,.72); backdrop-filter: blur(10px); }
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation: none !important; transition: none !important; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+
+<body class="bg-white text-gray-900 selection:bg-pink-200/60 selection:text-gray-900">
+
+  <!-- Top bar -->
+  <div class="bg-gradient-to-r from-pink-50 via-rose-50 to-purple-50 border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between text-sm">
+      <p class="text-gray-700">
+        <span class="font-bold text-pink-700">🌸 Today’s deal:</span>
+        <span class="font-semibold">10% off</span> Rose collections — code <span class="font-mono bg-white/70 px-2 py-0.5 rounded-lg border border-gray-100">ROSE10</span>
+      </p>
+      <div class="hidden sm:flex items-center gap-3 text-gray-600">
+        <a href="#faq" class="hover:text-gray-900">FAQ</a>
+        <span class="text-gray-300">•</span>
+        <a href="#contact" class="hover:text-gray-900">Contact</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 border-b border-gray-100 glass">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between gap-3">
+
+      <!-- Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+
+        <!-- Logo Icon -->
+        <div class="relative">
+<!-- bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 -->
+          <!-- Gradient Ring -->
+          <div class="absolute -inset-1 rounded-2xl  blur opacity-70 g"></div>
+
+          <!-- Logo Container -->
+          <div class="relative h-12 w-12 rounded-2xl  shadow-lg flex items-center justify-center overflow-hidden ">
+            <img
+              src="/417145447_826168969519626_4923840617973110949_n.jpg"
+              alt="Rika Flowers Logo"
+              class="h-full w-full object-cover rounded-2xl"
+            >
+          </div>
+        </div>
+
+        <!-- Text -->
+        <div class="leading-tight">
+          <p class="font-extrabold text-xl tracking-tight bg-gradient-to-r from-pink-600 to-rose-600 bg-clip-text text-transparent">
+            Rika Flowers
+          </p>
+          <p class="text-xs text-gray-500 tracking-wide">
+            since 1996
+          </p>
+        </div>
+
+      </a>
+
+      <!-- Nav -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-semibold">
+        <a class="hover:text-pink-600" href="#shop">Shop</a>
+        <a class="hover:text-pink-600" href="#collections">Collections</a>
+        <a class="hover:text-pink-600" href="#bundles">Bundles</a>
+        <a class="hover:text-pink-600" href="#reviews">Reviews</a>
+        <a class="hover:text-pink-600" href="#faq">FAQ</a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-2">
+        <button id="openSearch" class="px-3 py-2 rounded-2xl border border-gray-200 hover:bg-white hover:border-gray-300 text-sm font-semibold">
+          <i class="fa-solid fa-magnifying-glass"></i> <span class="hidden sm:inline">Search</span>
+        </button>
+
+        <button id="openCart" class="relative px-3 py-2 rounded-2xl bg-gray-900 text-white hover:bg-gray-800 text-sm font-semibold shadow-soft">
+          <i class="fa-solid fa-bag-shopping"></i> <span class="hidden sm:inline">Cart</span>
+          <span id="cartCount" class="absolute -top-2 -right-2 h-5 min-w-[20px] px-1 rounded-full bg-pink-600 text-xs font-black flex items-center justify-center">0</span>
+        </button>
+
+        <button id="openMenu" class="md:hidden px-3 py-2 rounded-2xl border border-gray-200 hover:bg-white">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col gap-3 text-sm font-semibold">
+        <a class="hover:text-pink-600" href="#shop">Shop</a>
+        <a class="hover:text-pink-600" href="#collections">Collections</a>
+        <a class="hover:text-pink-600" href="#bundles">Bundles</a>
+        <a class="hover:text-pink-600" href="#reviews">Reviews</a>
+        <a class="hover:text-pink-600" href="#faq">FAQ</a>
+        <a class="hover:text-pink-600" href="#contact">Contact</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Marquee -->
+  <section class="border-b border-gray-100 bg-white">
+    <div class="overflow-hidden">
+      <div class="flex w-[200%] gap-6 py-3 text-sm text-gray-700 animate-marquee">
+        <div class="flex w-1/2 justify-around gap-6">
+          <span>🚚 Same-day delivery</span>
+          <span>💳 Secure checkout</span>
+          <span>🌿 Fresh guarantee</span>
+          <span>🎁 Free note card</span>
+          <span>📦 Premium wrap</span>
+        </div>
+        <div class="flex w-1/2 justify-around gap-6">
+          <span>🚚 Same-day delivery</span>
+          <span>💳 Secure checkout</span>
+          <span>🌿 Fresh guarantee</span>
+          <span>🎁 Free note card</span>
+          <span>📦 Premium wrap</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-b from-pink-50 via-white to-white"></div>
+
+    <!-- floating blobs -->
+    <div class="absolute -top-24 -left-28 h-72 w-72 rounded-full bg-pink-200/35 blur-3xl"></div>
+    <div class="absolute top-10 -right-24 h-72 w-72 rounded-full bg-rose-200/35 blur-3xl"></div>
+    <div class="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-purple-200/25 blur-3xl"></div>
+
+    <div class="max-w-7xl mx-auto px-4 py-14 md:py-20 relative">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-pink-100 text-pink-700 text-sm font-semibold">
+            ✨ New drops every week • <span class="text-gray-600">Limited stock</span>
+          </span>
+
+          <h1 class="mt-5 text-4xl md:text-5xl font-black tracking-tight leading-[1.06]">
+            Send flowers that feel
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-rose-600 to-purple-600">like a warm hug</span>.
+          </h1>
+
+          <p class="mt-4 text-gray-600 text-lg leading-relaxed">
+            Premium bouquets, gift boxes, and sweet add-ons. Add a note, schedule delivery, and checkout in seconds.
+          </p>
+
+          <div class="mt-7 flex flex-wrap gap-3">
+            <a href="#shop" class="px-5 py-3 rounded-2xl bg-gray-900 text-white font-semibold hover:bg-gray-800 shadow-soft">
+              Shop Best Sellers <i class="fa-solid fa-arrow-right ml-1"></i>
+            </a>
+            <a href="#bundles" class="px-5 py-3 rounded-2xl border border-gray-200 font-semibold hover:bg-white">
+              Explore Bundles
+            </a>
+          </div>
+
+          <!-- Trust pills -->
+          <div class="mt-8 grid sm:grid-cols-3 gap-3 text-sm">
+            <div class="rounded-2xl bg-white border border-gray-100 shadow-soft p-4">
+              <p class="text-gray-500">Delivery</p>
+              <p class="font-extrabold">Same-day</p>
+            </div>
+            <div class="rounded-2xl bg-white border border-gray-100 shadow-soft p-4">
+              <p class="text-gray-500">Packaging</p>
+              <p class="font-extrabold">Premium wrap</p>
+            </div>
+            <div class="rounded-2xl bg-white border border-gray-100 shadow-soft p-4">
+              <p class="text-gray-500">Guarantee</p>
+              <p class="font-extrabold">Freshness</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Featured card + live countdown -->
+        <div class="relative">
+          <div class="rounded-3xl border border-pink-100 bg-white shadow-soft p-6 md:p-7">
+            <div class="flex items-start justify-between gap-4">
+              <div>
+                <p class="text-sm text-gray-500">Featured • Today’s offer</p>
+                <p class="text-xl font-extrabold">Rose & Peony Mix</p>
+                <p class="text-gray-600 mt-1">Soft pink, romantic vibes.</p>
+              </div>
+              <div class="text-right">
+                <p class="text-sm text-gray-500">From</p>
+                <p class="text-2xl font-black">$24</p>
+              </div>
+            </div>
+
+            <div class="mt-4 flex items-center justify-between rounded-2xl bg-gray-50 border border-gray-100 p-4">
+              <div>
+                <p class="text-xs text-gray-500">Deal ends in</p>
+                <p id="dealCountdown" class="font-black text-lg">--:--:--</p>
+              </div>
+              <div class="h-10 w-10 rounded-2xl bg-pink-100 flex items-center justify-center text-pink-700">
+                <i class="fa-solid fa-bolt"></i>
+              </div>
+            </div>
+
+            <!-- Decorative "image" -->
+            <div class="mt-5 grid grid-cols-3 gap-3">
+              <div class="h-24 rounded-2xl bg-pink-100/60 animate-floaty"></div>
+              <div class="h-24 rounded-2xl bg-rose-100/60 shimmer"></div>
+              <div class="h-24 rounded-2xl bg-purple-100/60 animate-floaty" style="animation-delay:.7s"></div>
+            </div>
+
+            <button id="heroAddFeatured" class="mt-6 w-full px-5 py-3 rounded-2xl bg-gradient-to-r from-pink-600 to-rose-600 text-white font-semibold hover:opacity-95 shadow-soft">
+              Add Featured to Cart
+            </button>
+
+            <p class="mt-3 text-xs text-gray-500 text-center">Tip: Add chocolate bundle for extra smiles 🍫</p>
+          </div>
+
+          <div class="absolute -top-4 -left-4 bg-white border border-gray-100 shadow-soft rounded-2xl px-4 py-3">
+            <p class="text-xs text-gray-500">⭐ Rated</p>
+            <p class="font-extrabold">4.9 / 5</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Collections -->
+  <section id="collections" class="max-w-7xl mx-auto px-4 py-12 md:py-16">
+    <div class="flex items-end justify-between gap-4">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-black tracking-tight">Collections</h2>
+        <p class="text-gray-600 mt-2">Pick a vibe — we’ll handle the beauty.</p>
+      </div>
+      <button id="resetCollection" class="text-sm font-semibold text-pink-700 hover:text-pink-800">Reset →</button>
+    </div>
+
+    <div class="mt-8 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <button class="collectionBtn group rounded-3xl border border-gray-100 shadow-soft bg-white p-5 text-left hover:border-pink-200 hover:-translate-y-0.5 transition"
+              data-collection="Best Sellers">
+        <div class="h-10 w-10 rounded-2xl bg-pink-100 flex items-center justify-center">🔥</div>
+        <p class="mt-4 font-extrabold">Best Sellers</p>
+        <p class="text-sm text-gray-600 mt-1">Most-loved bouquets</p>
+        <p class="mt-4 text-sm font-semibold text-pink-700">View →</p>
+      </button>
+
+      <button class="collectionBtn group rounded-3xl border border-gray-100 shadow-soft bg-white p-5 text-left hover:border-pink-200 hover:-translate-y-0.5 transition"
+              data-collection="Birthday">
+        <div class="h-10 w-10 rounded-2xl bg-rose-100 flex items-center justify-center">🎂</div>
+        <p class="mt-4 font-extrabold">Birthday</p>
+        <p class="text-sm text-gray-600 mt-1">Bright & cheerful</p>
+        <p class="mt-4 text-sm font-semibold text-pink-700">View →</p>
+      </button>
+
+      <button class="collectionBtn group rounded-3xl border border-gray-100 shadow-soft bg-white p-5 text-left hover:border-pink-200 hover:-translate-y-0.5 transition"
+              data-collection="Romance">
+        <div class="h-10 w-10 rounded-2xl bg-purple-100 flex items-center justify-center">💘</div>
+        <p class="mt-4 font-extrabold">Romance</p>
+        <p class="text-sm text-gray-600 mt-1">Soft, elegant, sweet</p>
+        <p class="mt-4 text-sm font-semibold text-pink-700">View →</p>
+      </button>
+
+      <button class="collectionBtn group rounded-3xl border border-gray-100 shadow-soft bg-white p-5 text-left hover:border-pink-200 hover:-translate-y-0.5 transition"
+              data-collection="Sympathy">
+        <div class="h-10 w-10 rounded-2xl bg-gray-100 flex items-center justify-center">🤍</div>
+        <p class="mt-4 font-extrabold">Sympathy</p>
+        <p class="text-sm text-gray-600 mt-1">Gentle & respectful</p>
+        <p class="mt-4 text-sm font-semibold text-pink-700">View →</p>
+      </button>
+    </div>
+  </section>
+
+  <!-- Bundles (new section) -->
+  <section id="bundles" class="bg-gray-50 border-y border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 py-12 md:py-16">
+      <div class="flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-black tracking-tight">Bundles</h2>
+          <p class="text-gray-600 mt-2">More value, more “wow”.</p>
+        </div>
+        <div class="text-sm text-gray-600">
+          <span class="font-semibold text-gray-900">Pro tip:</span> add-ons make it memorable ✨
+        </div>
+      </div>
+
+      <div class="mt-8 grid lg:grid-cols-3 gap-5">
+        <div class="rounded-3xl bg-white border border-gray-100 shadow-soft p-6">
+          <div class="flex items-center justify-between">
+            <p class="font-extrabold text-lg">Bouquet + Chocolate</p>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-rose-50 border border-rose-100 text-rose-700">Save $3</span>
+          </div>
+          <p class="mt-2 text-gray-600">Perfect for birthdays & surprises.</p>
+          <div class="mt-4 flex items-center gap-3 text-3xl">
+            <span>💐</span><span>+</span><span>🍫</span>
+          </div>
+          <div class="mt-5 flex items-center justify-between">
+            <p class="font-black text-2xl">$29</p>
+            <button class="bundleAdd px-4 py-2 rounded-2xl bg-gray-900 text-white font-semibold hover:bg-gray-800"
+                    data-bundle="bundle_choco">Add</button>
+          </div>
+        </div>
+
+        <div class="rounded-3xl bg-white border border-gray-100 shadow-soft p-6">
+          <div class="flex items-center justify-between">
+            <p class="font-extrabold text-lg">Romance Deluxe</p>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-pink-50 border border-pink-100 text-pink-700">Best value</span>
+          </div>
+          <p class="mt-2 text-gray-600">Roses + peony box + note.</p>
+          <div class="mt-4 flex items-center gap-3 text-3xl">
+            <span>🌹</span><span>+</span><span>🎁</span><span>+</span><span>💌</span>
+          </div>
+          <div class="mt-5 flex items-center justify-between">
+            <p class="font-black text-2xl">$39</p>
+            <button class="bundleAdd px-4 py-2 rounded-2xl bg-gray-900 text-white font-semibold hover:bg-gray-800"
+                    data-bundle="bundle_romance">Add</button>
+          </div>
+        </div>
+
+        <div class="rounded-3xl bg-white border border-gray-100 shadow-soft p-6">
+          <div class="flex items-center justify-between">
+            <p class="font-extrabold text-lg">Mini Gift Set</p>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-gray-50 border border-gray-100 text-gray-700">Quick pick</span>
+          </div>
+          <p class="mt-2 text-gray-600">Small budget, big smiles.</p>
+          <div class="mt-4 flex items-center gap-3 text-3xl">
+            <span>🎁</span><span>+</span><span>🌼</span>
+          </div>
+          <div class="mt-5 flex items-center justify-between">
+            <p class="font-black text-2xl">$14</p>
+            <button class="bundleAdd px-4 py-2 rounded-2xl bg-gray-900 text-white font-semibold hover:bg-gray-800"
+                    data-bundle="bundle_mini">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Shop -->
+  <section id="shop">
+    <div class="max-w-7xl mx-auto px-4 py-12 md:py-16">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div>
+          <h2 class="text-2xl md:text-3xl font-black tracking-tight">Shop flowers</h2>
+          <p class="text-gray-600 mt-2">Search, filter, quick-view, add to cart.</p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="flex flex-wrap gap-2">
+            <button class="filterBtn px-4 py-2 rounded-2xl bg-white border border-gray-200 hover:bg-gray-50 text-sm font-semibold" data-filter="all">All</button>
+            <button class="filterBtn px-4 py-2 rounded-2xl bg-white border border-gray-200 hover:bg-gray-50 text-sm font-semibold" data-filter="Bouquet">Bouquet</button>
+            <button class="filterBtn px-4 py-2 rounded-2xl bg-white border border-gray-200 hover:bg-gray-50 text-sm font-semibold" data-filter="Box">Box</button>
+            <button class="filterBtn px-4 py-2 rounded-2xl bg-white border border-gray-200 hover:bg-gray-50 text-sm font-semibold" data-filter="Gift">Gift</button>
+          </div>
+
+          <select id="sortSelect" class="px-4 py-2 rounded-2xl bg-white border border-gray-200 text-sm font-semibold">
+            <option value="featured">Sort: Featured</option>
+            <option value="priceLow">Price: Low → High</option>
+            <option value="priceHigh">Price: High → Low</option>
+            <option value="ratingHigh">Rating: High → Low</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Shop top mini info -->
+      <div class="mt-6 rounded-3xl border border-gray-100 bg-gradient-to-r from-pink-50 via-white to-rose-50 p-5 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <p class="text-gray-700">
+          <span class="font-extrabold">Free note card</span> with every order.
+          <span class="text-gray-500">Add your message at checkout 💌</span>
+        </p>
+        <button id="openGiftNote" class="px-4 py-2 rounded-2xl bg-white border border-gray-200 hover:bg-gray-50 text-sm font-semibold">
+          Preview note styles <i class="fa-solid fa-chevron-right ml-1 text-gray-400"></i>
+        </button>
+      </div>
+
+      <div id="productsGrid" class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+    </div>
+  </section>
+
+  <!-- Reviews -->
+  <section id="reviews" class="bg-gray-50 border-y border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 py-12 md:py-16">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-black tracking-tight">Customers love us</h2>
+        <p class="text-gray-600 mt-2">Real words from happy receivers.</p>
+      </div>
+
+      <div class="mt-8 grid md:grid-cols-3 gap-4">
+        <div class="rounded-3xl border border-gray-100 bg-white shadow-soft p-6">
+          <p class="text-sm text-gray-500">⭐⭐⭐⭐⭐</p>
+          <p class="mt-3 font-bold">So fresh and beautiful!</p>
+          <p class="mt-2 text-gray-600">“Delivered fast and looked even better than the photos.”</p>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-sm font-semibold text-gray-900">— Dara</p>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-pink-50 border border-pink-100 text-pink-700">Verified</span>
+          </div>
+        </div>
+        <div class="rounded-3xl border border-gray-100 bg-white shadow-soft p-6">
+          <p class="text-sm text-gray-500">⭐⭐⭐⭐⭐</p>
+          <p class="mt-3 font-bold">Perfect birthday surprise</p>
+          <p class="mt-2 text-gray-600">“Elegant bouquet and the note card was cute.”</p>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-sm font-semibold text-gray-900">— Sopheak</p>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-rose-50 border border-rose-100 text-rose-700">Top review</span>
+          </div>
+        </div>
+        <div class="rounded-3xl border border-gray-100 bg-white shadow-soft p-6">
+          <p class="text-sm text-gray-500">⭐⭐⭐⭐⭐</p>
+          <p class="mt-3 font-bold">Great value</p>
+          <p class="mt-2 text-gray-600">“Amazing quality for the price. I’ll order again.”</p>
+          <div class="mt-4 flex items-center justify-between">
+            <p class="text-sm font-semibold text-gray-900">— Lina</p>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-gray-50 border border-gray-100 text-gray-700">Repeat buyer</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ + Contact -->
+  <section id="faq" class="max-w-7xl mx-auto px-4 py-12 md:py-16">
+    <div class="grid lg:grid-cols-2 gap-8">
+      <div>
+        <h2 class="text-2xl md:text-3xl font-black tracking-tight">FAQ</h2>
+        <p class="text-gray-600 mt-2">Quick answers for quick orders.</p>
+
+        <div class="mt-6 space-y-3">
+          <details class="group rounded-2xl bg-white border border-gray-100 shadow-soft p-5">
+            <summary class="cursor-pointer font-bold flex justify-between items-center">
+              Do you offer same-day delivery?
+              <span class="text-gray-400 group-open:rotate-180 transition"><i class="fa-solid fa-chevron-down"></i></span>
+            </summary>
+            <p class="mt-3 text-gray-600">Yes — for selected areas and orders placed before 2 PM.</p>
+          </details>
+
+          <details class="group rounded-2xl bg-white border border-gray-100 shadow-soft p-5">
+            <summary class="cursor-pointer font-bold flex justify-between items-center">
+              Can I add a note or gift?
+              <span class="text-gray-400 group-open:rotate-180 transition"><i class="fa-solid fa-chevron-down"></i></span>
+            </summary>
+            <p class="mt-3 text-gray-600">Yes. Add a message at checkout and choose bundle add-ons.</p>
+          </details>
+
+          <details class="group rounded-2xl bg-white border border-gray-100 shadow-soft p-5">
+            <summary class="cursor-pointer font-bold flex justify-between items-center">
+              What if flowers are out of stock?
+              <span class="text-gray-400 group-open:rotate-180 transition"><i class="fa-solid fa-chevron-down"></i></span>
+            </summary>
+            <p class="mt-3 text-gray-600">We’ll replace with similar flowers of equal or higher value.</p>
+          </details>
+        </div>
+      </div>
+
+      <div id="contact" class="rounded-3xl bg-white border border-gray-100 shadow-soft p-6 md:p-7">
+        <h3 class="text-xl font-extrabold">Contact & Newsletter</h3>
+        <p class="text-gray-600 mt-2">Get promos, new drops, and gift ideas.</p>
+
+        <form id="newsletterForm" class="mt-6 space-y-3">
+          <input class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-pink-100"
+                 type="text" placeholder="Your name" required />
+          <input class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-pink-100"
+                 type="email" placeholder="Email address" required />
+          <button class="w-full px-5 py-3 rounded-2xl bg-gray-900 text-white font-semibold hover:bg-gray-800">
+            Subscribe
+          </button>
+          <p id="newsletterMsg" class="text-sm text-gray-600 hidden"></p>
+        </form>
+
+        <div class="mt-6 grid grid-cols-2 gap-3 text-sm">
+          <div class="rounded-2xl bg-gray-50 p-4 border border-gray-100">
+            <p class="text-gray-500">Phone</p>
+            <p class="font-semibold">+855 000 000</p>
+          </div>
+          <div class="rounded-2xl bg-gray-50 p-4 border border-gray-100">
+            <p class="text-gray-500">Hours</p>
+            <p class="font-semibold">8AM — 8PM</p>
+          </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <a class="px-4 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50 text-sm font-semibold" href="#"><i class="fa-brands fa-facebook"></i> Facebook</a>
+          <a class="px-4 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50 text-sm font-semibold" href="#"><i class="fa-brands fa-tiktok"></i> TikTok</a>
+          <a class="px-4 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50 text-sm font-semibold" href="#"><i class="fa-brands fa-instagram"></i> Instagram</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div>
+        <p class="font-extrabold text-lg">Rika Flowers</p>
+        <p class="text-gray-600 text-sm mt-1">© <span id="year"></span> All rights reserved.</p>
+      </div>
+      <div class="flex flex-wrap gap-3 text-sm">
+        <a class="text-gray-600 hover:text-gray-900" href="#shop">Shop</a>
+        <a class="text-gray-600 hover:text-gray-900" href="#collections">Collections</a>
+        <a class="text-gray-600 hover:text-gray-900" href="#bundles">Bundles</a>
+        <a class="text-gray-600 hover:text-gray-900" href="#faq">FAQ</a>
+        <a class="text-gray-600 hover:text-gray-900" href="#contact">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Search Modal -->
+  <div id="searchModal" class="hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="relative max-w-2xl mx-auto mt-24 bg-white rounded-3xl shadow-soft border border-gray-100 overflow-hidden animate-pop">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between gap-3">
+        <div>
+          <p class="font-extrabold">Search products</p>
+          <p class="text-sm text-gray-600">Type “Rose”, “Tulip”, “Box”…</p>
+        </div>
+        <button id="closeSearch" class="px-3 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50">✕</button>
+      </div>
+      <div class="p-5">
+        <input id="searchInput" class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-pink-100"
+               type="text" placeholder="Search..." />
+        <div class="mt-4 flex items-center justify-between text-sm text-gray-600">
+          <p><span id="resultsCount">0</span> results</p>
+          <button id="clearSearch" class="font-semibold text-pink-700 hover:text-pink-800">Clear</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gift Note Modal -->
+  <div id="giftNoteModal" class="hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="relative max-w-xl mx-auto mt-20 bg-white rounded-3xl shadow-soft border border-gray-100 overflow-hidden animate-pop">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <p class="font-extrabold text-lg">Note card styles</p>
+          <p class="text-sm text-gray-600">Pick one at checkout.</p>
+        </div>
+        <button id="closeGiftNote" class="px-3 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50">✕</button>
+      </div>
+      <div class="p-5 space-y-3">
+        <div class="rounded-3xl border border-gray-100 p-5 bg-gradient-to-r from-pink-50 to-white">
+          <p class="text-xs text-gray-500">Style A</p>
+          <p class="font-extrabold">“You make my days brighter.”</p>
+        </div>
+        <div class="rounded-3xl border border-gray-100 p-5 bg-gradient-to-r from-rose-50 to-white">
+          <p class="text-xs text-gray-500">Style B</p>
+          <p class="font-extrabold">“Thinking of you — always.”</p>
+        </div>
+        <div class="rounded-3xl border border-gray-100 p-5 bg-gradient-to-r from-purple-50 to-white">
+          <p class="text-xs text-gray-500">Style C</p>
+          <p class="font-extrabold">“A little love, delivered.”</p>
+        </div>
+        <button id="giftNoteOk" class="w-full px-5 py-3 rounded-2xl bg-gray-900 text-white font-semibold hover:bg-gray-800">
+          Nice 💌
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div id="quickViewModal" class="hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-black/40"></div>
+    <div class="relative max-w-3xl mx-auto mt-14 bg-white rounded-3xl shadow-soft border border-gray-100 overflow-hidden animate-pop">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <p class="font-extrabold text-lg">Quick view</p>
+          <p id="qvSub" class="text-sm text-gray-600">—</p>
+        </div>
+        <button id="closeQuickView" class="px-3 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50">✕</button>
+      </div>
+
+      <div class="p-5 grid md:grid-cols-2 gap-5">
+        <!-- UPDATED: image instead of icon -->
+        <div class="rounded-3xl overflow-hidden bg-gradient-to-br from-pink-50 via-white to-rose-50 border border-gray-100 h-72 md:h-full">
+          <img id="qvImg" src="" alt="Product image" class="h-full w-full object-cover" />
+        </div>
+
+        <div>
+          <p id="qvName" class="text-2xl font-black">—</p>
+          <p id="qvMeta" class="text-gray-600 mt-2">—</p>
+          <div class="mt-4 flex items-center justify-between">
+            <div>
+              <p class="text-sm text-gray-500">Price</p>
+              <p id="qvPrice" class="text-2xl font-black">$0</p>
+            </div>
+            <div class="text-right">
+              <p class="text-sm text-gray-500">Rating</p>
+              <p id="qvRating" class="font-extrabold">⭐ 0.0</p>
+            </div>
+          </div>
+
+          <div class="mt-5 rounded-3xl border border-gray-100 bg-gray-50 p-4">
+            <p class="text-sm font-bold">Delivery</p>
+            <p class="text-sm text-gray-600 mt-1">Order before 2 PM for same-day delivery (selected areas).</p>
+          </div>
+
+          <button id="qvAdd" class="mt-5 w-full px-5 py-3 rounded-2xl bg-gradient-to-r from-pink-600 to-rose-600 text-white font-semibold hover:opacity-95 shadow-soft">
+            Add to cart
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Drawer -->
+  <div id="cartDrawer" class="hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <div class="absolute right-0 top-0 h-full w-full sm:w-[420px] bg-white border-l border-gray-100 shadow-soft flex flex-col">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <p class="font-extrabold text-lg">Your Cart</p>
+          <p class="text-sm text-gray-600">Fast checkout, secure payment.</p>
+        </div>
+        <button id="closeCart" class="px-3 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50">✕</button>
+      </div>
+
+      <div id="cartItems" class="p-5 flex-1 overflow-auto space-y-3"></div>
+
+      <div class="p-5 border-t border-gray-100">
+        <div class="flex items-center justify-between text-sm text-gray-600">
+          <span>Subtotal</span>
+          <span id="cartSubtotal">$0</span>
+        </div>
+        <div class="flex items-center justify-between text-sm text-gray-600 mt-2">
+          <span>Delivery</span>
+          <span id="cartDelivery">$0</span>
+        </div>
+        <div class="flex items-center justify-between mt-4">
+          <span class="font-extrabold text-lg">Total</span>
+          <span id="cartTotal" class="font-black text-xl">$0</span>
+        </div>
+
+        <button id="checkoutBtn" class="mt-5 w-full px-5 py-3 rounded-2xl bg-gray-900 text-white font-semibold hover:bg-gray-800 shadow-soft">
+          Checkout
+        </button>
+        <button id="clearCart" class="mt-2 w-full px-5 py-3 rounded-2xl border border-gray-200 font-semibold hover:bg-gray-50">
+          Clear cart
+        </button>
+
+        <p class="mt-3 text-xs text-gray-500">
+          Demo template only — connect real backend + payment in production.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkoutModal" class="hidden fixed inset-0 z-50">
+    <div class="absolute inset-0 bg-black/40"></div>
+
+    <div class="relative max-w-xl mx-auto mt-16 bg-white rounded-3xl shadow-soft border border-gray-100 overflow-hidden animate-pop">
+      <div class="p-5 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <p class="font-extrabold text-lg">Checkout</p>
+          <p class="text-sm text-gray-600">Enter delivery details (demo).</p>
+        </div>
+        <button id="closeCheckout" class="px-3 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50">✕</button>
+      </div>
+
+      <form id="checkoutForm" class="p-5 space-y-3">
+        <div class="grid sm:grid-cols-2 gap-3">
+          <input class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-pink-100"
+                 required placeholder="Full name" />
+          <input class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-pink-100"
+                 required placeholder="Phone number" />
+        </div>
+        <input class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-pink-100"
+               required placeholder="Delivery address" />
+        <textarea class="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:outline-none focus:ring-4 focus:ring-pink-100"
+                  rows="3" placeholder="Note (optional)"></textarea>
+
+        <div class="flex items-center justify-between pt-2">
+          <p class="text-sm text-gray-600">Total</p>
+          <p id="checkoutTotal" class="font-black text-xl">$0</p>
+        </div>
+
+        <button class="w-full mt-2 px-5 py-3 rounded-2xl bg-gradient-to-r from-pink-600 to-rose-600 text-white font-semibold hover:opacity-95 shadow-soft">
+          Place order
+        </button>
+
+        <p id="orderMsg" class="text-sm text-gray-600 hidden"></p>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // ---------------- Data ----------------
+    // UPDATED: use img instead of icon
+    const products = [
+      { id: "p1",  name: "Rose Bliss Bouquet",        price: 24, rating: 4.9, type: "Bouquet", collection: "Romance",      badge: "Best Seller", img: "/image.png" },
+      { id: "p2",  name: "Tulip Morning Bouquet",     price: 19, rating: 4.7, type: "Bouquet", collection: "Birthday",     badge: "New",         img: "/images/tulip.jpg" },
+      { id: "p3",  name: "Peony Dream Box",           price: 32, rating: 4.8, type: "Box",     collection: "Romance",      badge: "Premium",     img: "/images/peony.jpg" },
+      { id: "p4",  name: "Sunflower Smile Bouquet",   price: 18, rating: 4.6, type: "Bouquet", collection: "Birthday",     badge: "Popular",     img: "/images/sunflower.jpg" },
+      { id: "p5",  name: "White Lily Sympathy",       price: 26, rating: 4.7, type: "Bouquet", collection: "Sympathy",     badge: "Elegant",     img: "/images/lily.jpg" },
+      { id: "p6",  name: "Mini Rose Gift Set",        price: 14, rating: 4.5, type: "Gift",    collection: "Best Sellers", badge: "Gift",        img: "/images/mini-rose.jpg" },
+      { id: "p7",  name: "Orchid Grace Box",          price: 35, rating: 4.9, type: "Box",     collection: "Best Sellers", badge: "Top Rated",   img: "/images/orchid.jpg" },
+      { id: "p8",  name: "Lavender Love Bouquet",     price: 22, rating: 4.6, type: "Bouquet", collection: "Romance",      badge: "Soft",        img: "/images/lavender.jpg" },
+      { id: "p9",  name: "Pink Carnation Box",        price: 27, rating: 4.7, type: "Box",     collection: "Best Sellers", badge: "Sweet",       img: "/images/carnation.jpg" },
+      { id: "p10", name: "Chocolate + Flowers Combo", price: 29, rating: 4.8, type: "Gift",    collection: "Birthday",     badge: "Combo",       img: "/images/choco.jpg" },
+      { id: "p11", name: "Daisy Daylight Bouquet",    price: 16, rating: 4.4, type: "Bouquet", collection: "Birthday",     badge: "Budget",      img: "/images/daisy.jpg" },
+      { id: "p12", name: "Pure White Box",            price: 31, rating: 4.7, type: "Box",     collection: "Sympathy",     badge: "Classic",     img: "/images/white-box.jpg" }
+    ];
+
+    // Bundles (demo items)
+    const bundles = {
+      bundle_choco: { id: "b1", name: "Bouquet + Chocolate Bundle", price: 29 },
+      bundle_romance: { id: "b2", name: "Romance Deluxe Bundle", price: 39 },
+      bundle_mini: { id: "b3", name: "Mini Gift Set Bundle", price: 14 },
+    };
+
+    let state = {
+      filter: "all",
+      collection: null,
+      search: "",
+      sort: "featured",
+      cart: JSON.parse(localStorage.getItem("rika_cart2") || "[]") // [{id, qty, isBundle?}]
+    };
+
+    // ---------------- Helpers ----------------
+    const $ = (sel) => document.querySelector(sel);
+    const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+    const money = (n) => `$${Number(n).toFixed(0)}`;
+
+    function saveCart() { localStorage.setItem("rika_cart2", JSON.stringify(state.cart)); }
+    function cartCount() { return state.cart.reduce((s, i) => s + i.qty, 0); }
+
+    function findItemPrice(item) {
+      if (item.isBundle) return bundles[item.id]?.price ?? 0;
+      const p = products.find(x => x.id === item.id);
+      return p ? p.price : 0;
+    }
+
+    function cartSubtotal() {
+      return state.cart.reduce((sum, item) => sum + findItemPrice(item) * item.qty, 0);
+    }
+
+    function deliveryFee(subtotal) { return subtotal === 0 ? 0 : (subtotal >= 25 ? 0 : 2); }
+
+    function setCartBadge() { $("#cartCount").textContent = cartCount(); }
+
+    // Toast
+    let toastTimer = null;
+    function toast(msg) {
+      let el = document.getElementById("toast");
+      if (!el) {
+        el = document.createElement("div");
+        el.id = "toast";
+        el.className = "fixed bottom-5 left-1/2 -translate-x-1/2 z-[60] px-4 py-3 rounded-2xl bg-gray-900 text-white text-sm shadow-soft";
+        document.body.appendChild(el);
+      }
+      el.textContent = msg;
+      el.style.opacity = "1";
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => { el.style.opacity = "0"; }, 1700);
+    }
+
+    // ---------------- Cart actions ----------------
+    function addToCart(id, isBundle = false) {
+      const found = state.cart.find(x => x.id === id && x.isBundle === isBundle);
+      if (found) found.qty += 1;
+      else state.cart.push({ id, qty: 1, isBundle });
+      saveCart();
+      setCartBadge();
+      renderCart();
+      toast("Added to cart ✅");
+    }
+
+    function removeFromCart(id, isBundle = false) {
+      state.cart = state.cart.filter(x => !(x.id === id && x.isBundle === isBundle));
+      saveCart();
+      setCartBadge();
+      renderCart();
+    }
+
+    function setQty(id, qty, isBundle = false) {
+      const item = state.cart.find(x => x.id === id && x.isBundle === isBundle);
+      if (!item) return;
+      item.qty = Math.max(1, qty);
+      saveCart();
+      setCartBadge();
+      renderCart();
+    }
+
+    // ---------------- Filtering / sorting ----------------
+    function getFilteredProducts() {
+      let list = [...products];
+
+      if (state.filter !== "all") list = list.filter(p => p.type === state.filter);
+      if (state.collection) list = list.filter(p => p.collection === state.collection);
+
+      if (state.search.trim()) {
+        const q = state.search.toLowerCase();
+        list = list.filter(p => p.name.toLowerCase().includes(q));
+      }
+
+      if (state.sort === "priceLow") list.sort((a,b) => a.price - b.price);
+      if (state.sort === "priceHigh") list.sort((a,b) => b.price - a.price);
+      if (state.sort === "ratingHigh") list.sort((a,b) => b.rating - a.rating);
+
+      return list;
+    }
+
+    // UPDATED: card uses image (not icon/emoji)
+    function productCard(p) {
+      return `
+        <article class="group rounded-3xl bg-white border border-gray-100 shadow-soft overflow-hidden hover:-translate-y-0.5 transition">
+          <div class="p-5">
+            <div class="flex items-start justify-between gap-3">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gray-50 border border-gray-100 text-xs font-bold text-gray-700">
+                <span>${p.type}</span>
+              </div>
+              <div class="text-xs font-bold px-3 py-1 rounded-full bg-pink-50 text-pink-700 border border-pink-100">
+                ${p.badge}
+              </div>
+            </div>
+
+            <div class="mt-4 h-40 rounded-3xl overflow-hidden border border-gray-100 bg-gray-50">
+              <img
+                src="${p.img}"
+                alt="${p.name}"
+                class="h-full w-full object-cover group-hover:scale-[1.03] transition duration-300"
+                loading="lazy"
+                onerror="this.src='https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=60';"
+              />
+            </div>
+
+            <h3 class="mt-4 font-extrabold text-lg">${p.name}</h3>
+            <p class="text-sm text-gray-600 mt-1">Collection: <span class="font-semibold">${p.collection}</span></p>
+
+            <div class="mt-4 flex items-center justify-between">
+              <div>
+                <p class="text-sm text-gray-500">Price</p>
+                <p class="text-xl font-black">${money(p.price)}</p>
+              </div>
+              <div class="text-right">
+                <p class="text-sm text-gray-500">Rating</p>
+                <p class="font-extrabold">⭐ ${p.rating.toFixed(1)}</p>
+              </div>
+            </div>
+
+            <div class="mt-5 grid grid-cols-2 gap-2">
+              <button data-qv="${p.id}"
+                class="px-4 py-3 rounded-2xl border border-gray-200 font-semibold hover:bg-gray-50">
+                Quick view
+              </button>
+              <button data-add="${p.id}"
+                class="px-4 py-3 rounded-2xl bg-gray-900 text-white font-semibold hover:bg-gray-800">
+                Add
+              </button>
+            </div>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderProducts() {
+      const grid = $("#productsGrid");
+      const list = getFilteredProducts();
+      $("#resultsCount").textContent = list.length;
+
+      grid.innerHTML = list.map(productCard).join("") || `
+        <div class="col-span-full rounded-3xl bg-white border border-gray-100 shadow-soft p-8 text-center">
+          <p class="font-extrabold text-lg">No products found</p>
+          <p class="text-gray-600 mt-1">Try a different filter or search.</p>
+        </div>
+      `;
+
+      $$("[data-add]").forEach(btn => btn.addEventListener("click", () => addToCart(btn.getAttribute("data-add"))));
+      $$("[data-qv]").forEach(btn => btn.addEventListener("click", () => openQuickView(btn.getAttribute("data-qv"))));
+    }
+
+    function renderCart() {
+      const wrap = $("#cartItems");
+      const sub = cartSubtotal();
+      const del = deliveryFee(sub);
+      const tot = sub + del;
+
+      $("#cartSubtotal").textContent = money(sub);
+      $("#cartDelivery").textContent = money(del);
+      $("#cartTotal").textContent = money(tot);
+      $("#checkoutTotal").textContent = money(tot);
+
+      if (state.cart.length === 0) {
+        wrap.innerHTML = `
+          <div class="rounded-3xl border border-gray-100 bg-gray-50 p-6 text-center">
+            <p class="font-extrabold">Your cart is empty</p>
+            <p class="text-gray-600 mt-1">Add something pretty 💐</p>
+            <a href="#shop" class="inline-block mt-4 px-5 py-3 rounded-2xl bg-gray-900 text-white font-semibold hover:bg-gray-800"
+               onclick="closeLayer('cartDrawer')">
+              Shop now
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      wrap.innerHTML = state.cart.map(item => {
+        const isBundle = !!item.isBundle;
+        const p = isBundle ? null : products.find(x => x.id === item.id);
+        const title = isBundle ? (bundles[item.id]?.name ?? "Bundle") : (p?.name ?? "Item");
+        const meta = isBundle ? "Bundle" : `${p.type} • ${p.collection}`;
+        const priceEach = findItemPrice(item);
+
+        return `
+          <div class="rounded-3xl border border-gray-100 bg-white p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="font-extrabold">${title}</p>
+                <p class="text-sm text-gray-600">${meta} • ${money(priceEach)} each</p>
+              </div>
+              <button class="px-3 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50"
+                      data-remove="${item.id}" data-bundle="${isBundle ? "1" : "0"}"><i class="fa-solid fa-trash"></i></button>
+            </div>
+
+            <div class="mt-3 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <button class="qtyBtn px-3 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50"
+                        data-dec="${item.id}" data-bundle="${isBundle ? "1" : "0"}">−</button>
+                <span class="min-w-[34px] text-center font-extrabold">${item.qty}</span>
+                <button class="qtyBtn px-3 py-2 rounded-2xl border border-gray-200 hover:bg-gray-50"
+                        data-inc="${item.id}" data-bundle="${isBundle ? "1" : "0"}">+</button>
+              </div>
+              <p class="font-black">${money(priceEach * item.qty)}</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      $$("[data-remove]").forEach(b => b.addEventListener("click", () => {
+        const id = b.getAttribute("data-remove");
+        const isBundle = b.getAttribute("data-bundle") === "1";
+        removeFromCart(id, isBundle);
+      }));
+
+      $$("[data-inc]").forEach(b => b.addEventListener("click", () => {
+        const id = b.getAttribute("data-inc");
+        const isBundle = b.getAttribute("data-bundle") === "1";
+        const it = state.cart.find(x => x.id === id && !!x.isBundle === isBundle);
+        setQty(id, (it?.qty || 1) + 1, isBundle);
+      }));
+
+      $$("[data-dec]").forEach(b => b.addEventListener("click", () => {
+        const id = b.getAttribute("data-dec");
+        const isBundle = b.getAttribute("data-bundle") === "1";
+        const it = state.cart.find(x => x.id === id && !!x.isBundle === isBundle);
+        setQty(id, (it?.qty || 1) - 1, isBundle);
+      }));
+    }
+
+    // ---------------- Layers ----------------
+    function openLayer(id) { document.getElementById(id).classList.remove("hidden"); }
+    function closeLayer(id) { document.getElementById(id).classList.add("hidden"); }
+    window.closeLayer = closeLayer;
+
+    function backdropClose(layerId) {
+      const layer = document.getElementById(layerId);
+      layer.addEventListener("click", (e) => {
+        if (e.target === layer || e.target.classList.contains("bg-black/40")) closeLayer(layerId);
+      });
+    }
+
+    // ---------------- Quick view ----------------
+    // UPDATED: quick view uses image
+    function openQuickView(productId) {
+      const p = products.find(x => x.id === productId);
+      if (!p) return;
+
+      const imgEl = document.getElementById("qvImg");
+      imgEl.src = p.img;
+      imgEl.alt = p.name;
+      imgEl.onerror = () => {
+        imgEl.src = "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=1200&q=60";
+      };
+
+      $("#qvName").textContent = p.name;
+      $("#qvSub").textContent = `${p.type} • ${p.collection}`;
+      $("#qvMeta").textContent = `Includes premium wrap + free note card.`;
+      $("#qvPrice").textContent = money(p.price);
+      $("#qvRating").textContent = `⭐ ${p.rating.toFixed(1)}`;
+      $("#qvAdd").onclick = () => addToCart(p.id);
+      openLayer("quickViewModal");
+    }
+
+    // ---------------- Countdown ----------------
+    function startDealCountdown() {
+      // Deal ends at local today 23:59:59
+      const end = new Date();
+      end.setHours(23,59,59,999);
+
+      const el = document.getElementById("dealCountdown");
+      function tick() {
+        const now = new Date();
+        let diff = end - now;
+        if (diff < 0) diff = 0;
+
+        const h = Math.floor(diff / (1000*60*60));
+        const m = Math.floor((diff % (1000*60*60)) / (1000*60));
+        const s = Math.floor((diff % (1000*60)) / 1000);
+
+        el.textContent =
+          String(h).padStart(2,"0") + ":" +
+          String(m).padStart(2,"0") + ":" +
+          String(s).padStart(2,"0");
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    // ---------------- Init ----------------
+    function init() {
+      $("#year").textContent = new Date().getFullYear();
+
+      $("#openMenu").addEventListener("click", () => $("#mobileMenu").classList.toggle("hidden"));
+
+      // Search modal
+      $("#openSearch").addEventListener("click", () => { openLayer("searchModal"); $("#searchInput").focus(); });
+      $("#closeSearch").addEventListener("click", () => closeLayer("searchModal"));
+      $("#clearSearch").addEventListener("click", () => { state.search = ""; $("#searchInput").value = ""; renderProducts(); });
+      backdropClose("searchModal");
+
+      $("#searchInput").addEventListener("input", (e) => { state.search = e.target.value; renderProducts(); });
+
+      // Gift note modal
+      $("#openGiftNote").addEventListener("click", () => openLayer("giftNoteModal"));
+      $("#closeGiftNote").addEventListener("click", () => closeLayer("giftNoteModal"));
+      $("#giftNoteOk").addEventListener("click", () => closeLayer("giftNoteModal"));
+      backdropClose("giftNoteModal");
+
+      // Quick view modal
+      $("#closeQuickView").addEventListener("click", () => closeLayer("quickViewModal"));
+      backdropClose("quickViewModal");
+
+      // Cart drawer
+      $("#openCart").addEventListener("click", () => openLayer("cartDrawer"));
+      $("#closeCart").addEventListener("click", () => closeLayer("cartDrawer"));
+      backdropClose("cartDrawer");
+
+      $("#clearCart").addEventListener("click", () => {
+        state.cart = [];
+        saveCart();
+        setCartBadge();
+        renderCart();
+        toast("Cart cleared 🧹");
+      });
+
+      // Checkout modal
+      $("#checkoutBtn").addEventListener("click", () => {
+        if (state.cart.length === 0) return toast("Your cart is empty");
+        openLayer("checkoutModal");
+      });
+      $("#closeCheckout").addEventListener("click", () => closeLayer("checkoutModal"));
+      backdropClose("checkoutModal");
+
+      $("#checkoutForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        state.cart = [];
+        saveCart();
+        setCartBadge();
+        renderCart();
+        closeLayer("checkoutModal");
+        toast("Order placed ✅ (demo)");
+      });
+
+      // Newsletter demo
+      $("#newsletterForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const msg = $("#newsletterMsg");
+        msg.classList.remove("hidden");
+        msg.textContent = "✅ Subscribed! (demo) Connect this form to your email service.";
+        toast("Subscribed ✅");
+        e.target.reset();
+      });
+
+      // Filters
+      $$(".filterBtn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.filter = btn.dataset.filter;
+          $$(".filterBtn").forEach(b => b.classList.remove("ring-4","ring-pink-100","border-pink-200"));
+          btn.classList.add("ring-4","ring-pink-100","border-pink-200");
+          renderProducts();
+        });
+      });
+
+      // Collections
+      $$(".collectionBtn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.collection = btn.dataset.collection;
+          document.getElementById("shop").scrollIntoView({ behavior: "smooth" });
+          toast(`Collection: ${state.collection}`);
+          renderProducts();
+        });
+      });
+
+      $("#resetCollection").addEventListener("click", () => {
+        state.collection = null;
+        toast("Collection reset");
+        renderProducts();
+      });
+
+      // Sort
+      $("#sortSelect").addEventListener("change", (e) => { state.sort = e.target.value; renderProducts(); });
+
+      // Hero add
+      $("#heroAddFeatured").addEventListener("click", () => addToCart("p1"));
+
+      // Bundle add buttons
+      $$(".bundleAdd").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const key = btn.getAttribute("data-bundle");
+          const b = bundles[key];
+          if (!b) return;
+          // store bundle in cart by key
+          addToCart(key, true);
+        });
+      });
+
+      // Escape close
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          ["searchModal","giftNoteModal","quickViewModal","cartDrawer","checkoutModal"].forEach(closeLayer);
+        }
+      });
+
+      // Defaults
+      const allBtn = document.querySelector('.filterBtn[data-filter="all"]');
+      allBtn.classList.add("ring-4","ring-pink-100","border-pink-200");
+
+      setCartBadge();
+      renderProducts();
+      renderCart();
+      startDealCountdown();
+    }
+
+    init();
+  </script>
+</body>
+</html>
